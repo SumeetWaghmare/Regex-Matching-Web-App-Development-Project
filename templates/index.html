@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Regex Matching Web App</title>
+    <style>
+        /* Centering the form */
+        .form-container {
+            margin: 0 auto;
+            width: 50%; /* Adjust width as needed */
+            text-align: center;
+            background-color: #f0f0f0; /* Background color for the form */
+            padding: 20px; /* Add some padding for better spacing */
+            border-radius: 10px; /* Rounded corners for the form */
+            position: relative; /* Position relative for absolute positioning */
+        }
+
+        /* Styling for the popup */
+        .popup {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+            width: 90%; /* 90% of screen width */
+            left: 5%; /* 5% from left */
+            z-index: 1;
+            text-align: left; /* Align text to the left */
+        }
+
+        /* Adjust input size */
+        .input-field {
+            width: calc(70% - 90px); /* Adjust width */
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        /* Adjust button size */
+        .validate-email-button {
+            width: calc(30% - 5px); /* Adjust width */
+            padding: 10px;
+            margin-left: 5px; /* Add margin */
+            margin-bottom: 10px;
+            background-color: #007bff; /* Blue color */
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        /* Hover effect for email validation button */
+        .validate-email-button:hover {
+            background-color: #0056b3; /* Darker shade of blue */
+        }
+
+        /* Adjust button size */
+        .submit-button {
+            width: 70%;
+            padding: 10px;
+            margin-top: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        /* Hover effect for button */
+        .submit-button:hover {
+            background-color: #45a049;
+        }
+
+        /* Reset button styling */
+        .reset-btn {
+            background-color: transparent; /* Transparent background */
+            border: none; /* Remove border */
+            padding: 0;
+            cursor: pointer;
+            position: absolute;
+            top: 5px;
+            right: 35px;
+        }
+
+        .reset-btn:hover {
+            color: #007bff; /* Change color on hover */
+        }
+
+        /* Close button styling */
+        .close-button {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            cursor: pointer;
+            background-color: transparent; /* Transparent background */
+            border: none; /* Remove border */
+        }
+
+        .close-button:hover {
+            color: #007bff; /* Change color on hover */
+        }
+    </style>
+    <script>
+        // Function to handle form submission
+        function handleSubmit(event) {
+            event.preventDefault(); // Prevent default form submission
+            
+            // Get test string and regex pattern from form
+            var testString = document.getElementById("test_string").value;
+            var regexPattern = document.getElementById("regex_pattern").value;
+
+            // Regular expression object
+            var regex = new RegExp(regexPattern, "g");
+
+            // Find matches
+            var matches = testString.match(regex);
+
+            // Display matches
+            var resultsDiv = document.getElementById("results");
+            if (matches) {
+                resultsDiv.innerHTML = "<h2>Matches:</h2><ul>";
+                matches.forEach(function(match) {
+                    resultsDiv.innerHTML += "<li>" + match + "</li>";
+                });
+                resultsDiv.innerHTML += "</ul>";
+            } else {
+                resultsDiv.innerHTML = "<p>No matches found.</p>";
+            }
+        }
+
+        // Function to toggle the visibility of the popup
+        function togglePopup() {
+            var popup = document.getElementById("popup");
+            if (popup.style.display === "none" || popup.style.display === "") {
+                popup.style.display = "block";
+            } else {
+                popup.style.display = "none";
+            }
+        }
+
+        // Function to validate email
+        function validateEmail() {
+            var email = document.getElementById("email").value;
+            var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            var validationMessage = document.getElementById("emailValidationResult");
+
+            if (emailRegex.test(email)) {
+                validationMessage.textContent = "Valid email!";
+                validationMessage.style.color = "green";
+            } else {
+                validationMessage.textContent = "Invalid email!";
+                validationMessage.style.color = "red";
+            }
+        }
+
+        // Function to reset email input and validation result
+        function resetPopup() {
+            document.getElementById("email").value = "";
+            document.getElementById("emailValidationResult").textContent = "";
+        }
+
+        // Add event listener for form submission
+        document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById("regex_form").addEventListener("submit", handleSubmit);
+        });
+    </script>
+</head>
+<body>
+    <div class="form-container">
+        <h1>Regex Matching Web App</h1>
+        <form id="regex_form" action="/results" method="post">
+            <input type="text" id="test_string" name="test_string" class="input-field" placeholder="Test String"><br>
+            <input type="text" id="regex_pattern" name="regex_pattern" class="input-field" placeholder="Regex Pattern"><br>
+            <!-- Submit button -->
+            <input type="submit" value="Submit" class="submit-button">
+        </form><br>
+
+        <!-- Button for email validation -->
+        <button class="validate-email-button" onclick="togglePopup()">Validate Email</button>
+        
+        <!-- Popup containing information -->
+        <div id="popup" class="popup" style="display: none;">
+            <!-- Include your regex information here -->
+            <strong>Validate Email:</strong><br>
+            <!-- You can provide information about how to use regex -->
+            <br>
+            <input type="text" id="email" class="input-field" placeholder="Enter Email_ID">
+            <button class="validate-email-button" onclick="validateEmail()">Validate Email</button> <!-- Validate Email button -->
+            <div id="emailValidationResult"></div>            
+            <button class="close-button" onclick="togglePopup()">X</button> <!-- Close button -->
+            <!-- Reset button -->
+            <button class="reset-btn" onclick="resetPopup()">↺</button>
+        </div>
+        <!-- Results container -->
+        <div id="results"></div>
+    </div>
+</body>
+</html>
